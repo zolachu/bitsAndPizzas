@@ -19,6 +19,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.zolachu.bitsandpizzas.databinding.FragmentOrderBinding;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,20 +27,28 @@ import com.google.android.material.snackbar.Snackbar;
  * create an instance of this fragment.
  */
 public class OrderFragment extends Fragment {
+    private FragmentOrderBinding _binding = null;
+
+    public FragmentOrderBinding binding;
+    private FragmentOrderBinding getBinding() {
+        return _binding;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_order, container, false);
-        MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
+        _binding = FragmentOrderBinding.inflate(inflater, container, false);
+
+        binding = getBinding();
+        View view = binding.getRoot();
+        MaterialToolbar toolbar = binding.toolbar;
 
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = view.findViewById(R.id.fab);
+        FloatingActionButton fab = binding.fab;
         fab.setOnClickListener(v -> {
-            RadioGroup group = view.findViewById(R.id.radio_group);
+            RadioGroup group = binding.radioGroup;
             int checkedId = group.getCheckedRadioButtonId();
             if (checkedId == -1) {
                 // no item selected
@@ -48,9 +57,8 @@ public class OrderFragment extends Fragment {
             } else {
                 String text = (checkedId == R.id.button_funghi) ? "funghi" : "diavolo";
 
-                RadioButton button = view.findViewById(checkedId);
-                Chip chipChilli = view.findViewById(R.id.chilli_oil);
-                Chip chipParmesan = view.findViewById(R.id.parmesan);
+                Chip chipChilli = binding.chilliOil;
+                Chip chipParmesan = binding.parmesan;
 
                 text += (chipChilli.isChecked()) ? ", extra chilli oil" : "";
                 text += (chipParmesan.isChecked()) ? ", extra parmesan" : "";
@@ -60,5 +68,9 @@ public class OrderFragment extends Fragment {
         return view;
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        _binding = null;
+    }
 }
